@@ -1,6 +1,6 @@
 const Header = () => {
   return (
-    <header className="flex flex-row justify-between px-30 py-8 items-center sticky top-0 z-30">
+    <header className="flex flex-row justify-between px-10 md:px-30 py-8 items-center sticky top-0 z-30">
       <div className="flex flex-col">
         <h1 className="text-2xl font-bold text-amber-100">Subtracker</h1>
         <span className="text-sm text-amber-100/80">Manage your subscriptions</span>

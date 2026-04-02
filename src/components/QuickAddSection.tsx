@@ -1,6 +1,6 @@
 const QuickAddSection = () => {
   return (
-    <section className="px-30">
+    <section className="px-10 md:px-30">
       <h2 className="text-amber-50/90 mb-2">Quick add from history</h2>
       <div className="flex flex-row gap-2">
         <button className="cursor-pointer flex flex-row items-center gap-2 border border-amber-800 rounded-lg px-5 py-1">
