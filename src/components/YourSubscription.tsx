@@ -23,7 +23,7 @@ const YourSubscription = () => {
         <div className="rounded-xl bg-amber-800/20 px-8 py-4">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row gap-4">
-              <div className="bg-red-700 p-2 rounded-xl w-12 h-12 grid place-items-center">
+              <div className="bg-red-700/30 p-2 rounded-xl w-12 h-12 grid place-items-center">
                 <span className="text-xl font-bold">N</span>
               </div>
               <div className="flex flex-col">
@@ -57,7 +57,7 @@ const YourSubscription = () => {
         <div className="rounded-xl bg-amber-800/20 px-8 py-4">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row gap-4">
-              <div className="bg-green-700 p-2 rounded-xl w-12 h-12 grid place-items-center">
+              <div className="bg-green-700/30 p-2 rounded-xl w-12 h-12 grid place-items-center">
                 <span className="text-xl font-bold">S</span>
               </div>
               <div className="flex flex-col">
@@ -91,7 +91,7 @@ const YourSubscription = () => {
         <div className="rounded-xl bg-amber-800/20 px-8 py-4">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row gap-4">
-              <div className="bg-green-700 p-2 rounded-xl w-12 h-12 grid place-items-center">
+              <div className="bg-green-700/30 p-2 rounded-xl w-12 h-12 grid place-items-center">
                 <span className="text-xl font-bold">A</span>
               </div>
               <div className="flex flex-col">
@@ -125,7 +125,7 @@ const YourSubscription = () => {
         <div className="rounded-xl bg-amber-800/20 px-8 py-4">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row gap-4">
-              <div className="bg-blue-400 p-2 rounded-xl w-12 h-12 grid place-items-center">
+              <div className="bg-blue-400/30 p-2 rounded-xl w-12 h-12 grid place-items-center">
                 <span className="text-xl font-bold">G</span>
               </div>
               <div className="flex flex-col">
@@ -159,7 +159,7 @@ const YourSubscription = () => {
         <div className="rounded-xl bg-amber-800/20 px-8 py-4">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row gap-4">
-              <div className="bg-purple-700 p-2 rounded-xl w-12 h-12 grid place-items-center">
+              <div className="bg-purple-700/30 p-2 rounded-xl w-12 h-12 grid place-items-center">
                 <span className="text-xl font-bold">H</span>
               </div>
               <div className="flex flex-col">
@@ -193,7 +193,7 @@ const YourSubscription = () => {
         <div className="rounded-xl bg-amber-800/20 px-8 py-4">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row gap-4">
-              <div className="bg-yellow-600 p-2 rounded-xl w-12 h-12 grid place-items-center">
+              <div className="bg-yellow-600/30 p-2 rounded-xl w-12 h-12 grid place-items-center">
                 <span className="text-xl font-bold">S</span>
               </div>
               <div className="flex flex-col">
