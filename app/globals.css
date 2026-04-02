@@ -22,17 +22,8 @@ body {
       rgba(251, 191, 36, 0.16),
       transparent 30%
     ),
-    radial-gradient(
-      circle at 85% 12%,
-      rgba(217, 119, 6, 0.18),
-      transparent 22%
-    ),
-    linear-gradient(180deg, #1a140e 0%, #120f0b 42%, #0d0a08 100%);
+    radial-gradient(circle at 85% 12%, rgba(217, 119, 6, 0.18), transparent 22%);
+  background-repeat: no-repeat;
   color: var(--foreground);
   font-family: var(--font-geist-sans), sans-serif;
-}
-
-::selection {
-  background: rgba(245, 158, 11, 0.35);
-  color: #fff8ef;
 }

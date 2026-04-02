@@ -1,21 +1,21 @@
 const YourSubscription = () => {
   return (
-    <section className="px-10 md:px-30 mt-22">
-      <div className="flex flex-col md:flex-row justify-between">
+    <section className="px-10 md:px-60 mt-22">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <h2 className="mb-3 text-2xl font-semibold tracking-tight text-amber-50">
           Your Subscription
         </h2>
-        <div className="inline-flex overflow-hidden rounded-xl border border-amber-200/10 bg-white/4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] backdrop-blur-sm">
-          <button className="cursor-pointer bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] px-14 text-amber-50 shadow-[0_8px_30px_rgba(180,83,9,0.2)] md:px-8">
+        <div className="grid w-full grid-cols-2 gap-2 md:inline-flex md:w-auto md:gap-0 md:overflow-hidden md:rounded-xl md:border md:border-amber-200/10 md:bg-white/4 md:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] md:backdrop-blur-sm">
+          <button className="cursor-pointer rounded-xl bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] px-6 py-2 text-center text-amber-50 shadow-[0_8px_30px_rgba(180,83,9,0.2)] md:rounded-none md:px-8">
             All 7
           </button>
-          <button className="cursor-pointer px-14 text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:px-8">
+          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:rounded-none md:border-0 md:bg-transparent md:px-8">
             Active 4
           </button>
-          <button className="cursor-pointer px-14 text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:px-8">
+          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:rounded-none md:border-0 md:bg-transparent md:px-8">
             Paused 2
           </button>
-          <button className="cursor-pointer px-14 text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:px-8">
+          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:rounded-none md:border-0 md:bg-transparent md:px-8">
             Canceled 1
           </button>
         </div>
