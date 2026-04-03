@@ -10,8 +10,8 @@ const Header = () => {
         </span>
       </div>
       <div>
-        <button className="cursor-pointer rounded-xl border border-amber-300/15 bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] px-5 py-2 text-sm font-medium text-amber-50 shadow-[0_10px_30px_rgba(180,83,9,0.28)] transition duration-200 hover:brightness-110">
-          + Add Subscription
+        <button className="flex flex-row cursor-pointer rounded-xl border border-amber-300/15 bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] px-5 py-2 text-xl md:text-sm font-medium text-amber-50 shadow-[0_10px_30px_rgba(180,83,9,0.28)] transition duration-200 hover:brightness-110">
+          + <span className="hidden md:block ml-1">Add Subscription</span>
         </button>
       </div>
     </header>
