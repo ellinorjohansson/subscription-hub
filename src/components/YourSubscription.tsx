@@ -1,27 +1,27 @@
 const YourSubscription = () => {
   return (
-    <section className="px-10 md:px-60 mt-22">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+    <section className="px-10 lg:pl-40 mt-22">
+      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <h2 className="mb-3 text-2xl font-semibold tracking-tight text-amber-50">
           Your Subscription
         </h2>
-        <div className="grid w-full grid-cols-2 gap-2 md:inline-flex md:w-auto md:gap-0 md:overflow-hidden md:rounded-xl md:border md:border-amber-200/10 md:bg-white/4 md:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] md:backdrop-blur-sm">
-          <button className="cursor-pointer rounded-xl bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] px-6 py-2 text-center text-amber-50 shadow-[0_8px_30px_rgba(180,83,9,0.2)] md:rounded-none md:px-8">
+        <div className="grid w-full grid-cols-2 gap-2 lg:inline-flex lg:w-auto lg:gap-0 lg:overflow-hidden lg:rounded-xl lg:border lg:border-amber-200/10 lg:bg-white/4 lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] lg:backdrop-blur-sm">
+          <button className="cursor-pointer rounded-xl bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] px-6 py-2 text-center text-amber-50 shadow-[0_8px_30px_rgba(180,83,9,0.2)] lg:rounded-none lg:px-8">
             All 7
           </button>
-          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:rounded-none md:border-0 md:bg-transparent md:px-8">
+          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
             Active 4
           </button>
-          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:rounded-none md:border-0 md:bg-transparent md:px-8">
+          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
             Paused 2
           </button>
-          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 md:rounded-none md:border-0 md:bg-transparent md:px-8">
+          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
             Canceled 1
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 py-12">
+      <div className="grid grid-cols-1 gap-4 py-12">
         <div className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row gap-4">

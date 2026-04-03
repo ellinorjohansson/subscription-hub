@@ -8,8 +8,10 @@ export default function Home() {
     <main className="flex flex-col flex-1 font-sans text-amber-50/95">
       <OverviewSection />
       <QuickAddSection />
-      <YourSubscription />
-      <RecentActivity />
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr]">
+        <YourSubscription />
+        <RecentActivity />
+      </div>
     </main>
   );
 }

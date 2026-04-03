@@ -1,6 +1,6 @@
 const Header = () => {
   return (
-    <header className="sticky top-0 z-30 flex flex-row items-center justify-between border-b border-amber-200/8 bg-[linear-gradient(180deg,rgba(18,15,11,0.88),rgba(18,15,11,0.55))] px-10 py-8 backdrop-blur-xl md:px-30">
+    <header className="sticky top-0 z-30 flex flex-row items-center justify-between border-b border-amber-200/8 bg-[linear-gradient(180deg,rgba(18,15,11,0.88),rgba(18,15,11,0.55))] px-10 py-8 backdrop-blur-xl lg:px-30">
       <div className="flex flex-col">
         <h1 className="text-2xl font-semibold tracking-[0.02em] text-amber-50">
           Subtracker

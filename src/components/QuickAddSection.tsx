@@ -1,6 +1,6 @@
 const QuickAddSection = () => {
   return (
-    <section className="px-10 md:px-60">
+    <section className="px-10 lg:px-40">
       <h2 className="mb-4 text-sm uppercase tracking-[0.18em] text-amber-100/60">
         Quick add from history
       </h2>
