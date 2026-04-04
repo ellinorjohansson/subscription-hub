@@ -1,7 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const EditSubscription = () => {
+interface EditSubscriptionProps {
+  onClose: () => void;
+};
+
+const EditSubscription = ({ onClose }: EditSubscriptionProps) => {
   const [color, setColor] = useState("#f59e0b");
 
   {/*So page not scroll*/ }
@@ -24,6 +28,7 @@ const EditSubscription = () => {
           <h2 className="font-bold text-xl">Edit subscription</h2>
           <button
             className="cursor-pointer text-amber-50/70 text-2xl hover:text-white"
+            onClick={onClose}
           >
             x
           </button>
@@ -94,6 +99,7 @@ const EditSubscription = () => {
           <div className="flex gap-3 justify-end mt-10">
             <button
               className="border border-amber-50/40 rounded-lg px-3 py-1 hover:bg-white/5"
+              onClick={onClose}
             >
               Cancel
             </button>
