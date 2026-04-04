@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Subscription Tracker",
   description: "Track your subscriptions",
+  icons: {
+    icon: "/favicon/subtracker_favicon.png",
+  },
 };
 
 export default function RootLayout({
