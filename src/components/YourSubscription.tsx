@@ -1,4 +1,50 @@
+"use client";
+
+import { useSubscriptions } from "@/src/context/SubscriptionsContext";
+
+const formatBillingDate = (value: string) => {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+  }).format(date);
+};
+
+const getStatusClasses = (status: "active" | "paused" | "canceled") => {
+  if (status === "paused") {
+    return {
+      badge: "border-yellow-300/12 bg-yellow-300/10",
+      dot: "bg-yellow-300",
+      text: "text-yellow-300",
+    };
+  }
+
+  if (status === "canceled") {
+    return {
+      badge: "border-red-400/12 bg-red-500/10",
+      dot: "bg-red-700",
+      text: "text-red-300",
+    };
+  }
+
+  return {
+    badge: "border-green-400/10 bg-green-500/10",
+    dot: "bg-green-400",
+    text: "text-green-400",
+  };
+};
+
 const YourSubscription = () => {
+  const { subscriptions } = useSubscriptions();
+  const activeCount = subscriptions.filter((subscription) => subscription.status === "active").length;
+  const pausedCount = subscriptions.filter((subscription) => subscription.status === "paused").length;
+  const canceledCount = subscriptions.filter((subscription) => subscription.status === "canceled").length;
+
   return (
     <section className="px-10 lg:pl-40 mt-22">
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
@@ -7,224 +53,64 @@ const YourSubscription = () => {
         </h2>
         <div className="grid w-full grid-cols-2 gap-2 lg:inline-flex lg:w-auto lg:gap-0 lg:overflow-hidden lg:rounded-xl lg:border lg:border-amber-200/10 lg:bg-white/4 lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] lg:backdrop-blur-sm">
           <button className="cursor-pointer rounded-xl bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] px-6 py-2 text-center text-amber-50 shadow-[0_8px_30px_rgba(180,83,9,0.2)] lg:rounded-none lg:px-8">
-            All 7
+            All {subscriptions.length}
           </button>
           <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
-            Active 4
+            Active {activeCount}
           </button>
           <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
-            Paused 2
+            Paused {pausedCount}
           </button>
           <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
-            Canceled 1
+            Canceled {canceledCount}
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 py-12">
-        <div className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row gap-4">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-red-600/24 text-amber-50 ring-1 ring-white/6">
-                <span className="text-xl font-bold">N</span>
-              </div>
-              <div className="flex flex-col">
-                <h3 className="font-semibold text-amber-50">Netflix</h3>
-                <span className="text-sm text-amber-100/62">Entertainment</span>
-              </div>
-            </div>
-            <div className="flex flex-row gap-3 items-center">
-              <div className="flex flex-row items-center gap-2 rounded-full border border-green-400/10 bg-green-500/10 px-4 py-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm text-green-400">Active</span>
-              </div>
-              <button className="flex flex-row cursor-pointer gap-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between mt-3">
-            <div>
-              <span className="text-amber-50">169 kr <span className="text-amber-50/55">/mo</span></span>
-              <span className="ml-5 text-amber-50/55">Jan 15</span>
-            </div>
-            <div>
-              <span className="text-sm text-amber-50/55">Monthly</span>
-            </div>
-          </div>
-        </div>
+        {subscriptions.map((subscription) => {
+          const statusClasses = getStatusClasses(subscription.status);
 
-        <div className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row gap-4">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-green-700/24 text-amber-50 ring-1 ring-white/6">
-                <span className="text-xl font-bold">S</span>
+          return (
+            <div key={subscription.id} className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
+              <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row gap-4">
+                  <div className="grid h-12 w-12 place-items-center rounded-xl text-amber-50 ring-1 ring-white/6" style={{ backgroundColor: subscription.brandColor }}>
+                    <span className="text-xl font-bold">{subscription.name.charAt(0).toUpperCase()}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <h3 className="font-semibold text-amber-50">{subscription.name}</h3>
+                    <span className="text-sm text-amber-100/62">{subscription.category}</span>
+                  </div>
+                </div>
+                <div className="flex flex-row items-center gap-3">
+                  <div className={`flex flex-row items-center gap-2 rounded-full border px-4 py-1 ${statusClasses.badge}`}>
+                    <div className={`h-2 w-2 rounded-full ${statusClasses.dot}`}></div>
+                    <span className={`text-sm capitalize ${statusClasses.text}`}>{subscription.status}</span>
+                  </div>
+                  <button className="flex cursor-pointer flex-row gap-0.5">
+                    <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
+                    <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
+                    <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
+                  </button>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <h3 className="font-semibold text-amber-50">Spotify</h3>
-                <span className="text-sm text-amber-100/62">Music</span>
-              </div>
-            </div>
-            <div className="flex flex-row gap-3 items-center">
-              <div className="flex flex-row items-center gap-2 rounded-full border border-green-400/10 bg-green-500/10 px-4 py-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm text-green-400">Active</span>
-              </div>
-              <button className="flex flex-row cursor-pointer gap-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between mt-3">
-            <div>
-              <span className="text-amber-50">109 kr <span className="text-amber-50/55">/mo</span></span>
-              <span className="ml-5 text-amber-50/55">Jan 8</span>
-            </div>
-            <div>
-              <span className="text-sm text-amber-50/55">Monthly</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row gap-4">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-orange-500/24 text-amber-50 ring-1 ring-white/6">
-                <span className="text-xl font-bold">A</span>
-              </div>
-              <div className="flex flex-col">
-                <h3 className="font-semibold text-amber-50">Adobe Creative Cloud</h3>
-                <span className="text-sm text-amber-100/62">Software</span>
+              <div className="mt-3 flex flex-row justify-between">
+                <div>
+                  <span className="text-amber-50">
+                    {subscription.price} kr <span className="text-amber-50/55">/{subscription.billingCycle === "monthly" ? "mo" : "yr"}</span>
+                  </span>
+                  <span className="ml-5 text-amber-50/55">{formatBillingDate(subscription.nextBillingDate)}</span>
+                </div>
+                <div>
+                  <span className="text-sm text-amber-50/55">
+                    {subscription.billingCycle === "monthly" ? "Monthly" : "Yearly"}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="flex flex-row gap-3 items-center">
-              <div className="flex flex-row items-center gap-2 rounded-full border border-green-400/10 bg-green-500/10 px-4 py-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm text-green-400">Active</span>
-              </div>
-              <button className="flex flex-row cursor-pointer gap-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between mt-3">
-            <div>
-              <span className="text-amber-50">341 kr <span className="text-amber-50/55">/mo</span></span>
-              <span className="ml-5 text-amber-50/55">Jan 8</span>
-            </div>
-            <div>
-              <span className="text-sm text-amber-50/55">Yearly</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row gap-4">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-sky-500/24 text-amber-50 ring-1 ring-white/6">
-                <span className="text-xl font-bold">G</span>
-              </div>
-              <div className="flex flex-col">
-                <h3 className="font-semibold text-amber-50">Gym Membership</h3>
-                <span className="text-sm text-amber-100/62">Health</span>
-              </div>
-            </div>
-            <div className="flex flex-row gap-3 items-center">
-              <div className="flex flex-row items-center gap-2 rounded-full border border-yellow-300/12 bg-yellow-300/10 px-4 py-1">
-                <div className="w-2 h-2 bg-yellow-300 rounded-full"></div>
-                <span className="text-sm text-yellow-300">Paused</span>
-              </div>
-              <button className="flex flex-row cursor-pointer gap-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between mt-3">
-            <div>
-              <span className="text-amber-50">449 kr <span className="text-amber-50/55">/mo</span></span>
-              <span className="ml-5 text-amber-50/55">Feb 4</span>
-            </div>
-            <div>
-              <span className="text-sm text-amber-50/55">Monthly</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row gap-4">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-fuchsia-600/24 text-amber-50 ring-1 ring-white/6">
-                <span className="text-xl font-bold">H</span>
-              </div>
-              <div className="flex flex-col">
-                <h3 className="font-semibold text-amber-50">HBO Max</h3>
-                <span className="text-sm text-amber-100/62">Entertainment</span>
-              </div>
-            </div>
-            <div className="flex flex-row gap-3 items-center">
-              <div className="flex flex-row items-center gap-2 rounded-full border border-red-400/12 bg-red-500/10 px-4 py-1">
-                <div className="w-2 h-2 bg-red-700 rounded-full"></div>
-                <span className="text-sm text-red-300">Canceled</span>
-              </div>
-              <button className="flex flex-row cursor-pointer gap-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between mt-3">
-            <div>
-              <span className="text-amber-50">179 kr <span className="text-amber-50/55">/mo</span></span>
-              <span className="ml-5 text-amber-50/55">Jan 8</span>
-            </div>
-            <div>
-              <span className="text-sm text-amber-50/55">Monthly</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row gap-4">
-              <div className="grid h-12 w-12 place-items-center rounded-xl bg-yellow-500/24 text-amber-50 ring-1 ring-white/6">
-                <span className="text-xl font-bold">S</span>
-              </div>
-              <div className="flex flex-col">
-                <h3 className="font-semibold text-amber-50">Snapchat</h3>
-                <span className="text-sm text-amber-100/62">Social</span>
-              </div>
-            </div>
-            <div className="flex flex-row gap-3 items-center">
-              <div className="flex flex-row items-center gap-2 rounded-full border border-green-400/10 bg-green-500/10 px-4 py-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm text-green-400">Active</span>
-              </div>
-              <button className="flex flex-row cursor-pointer gap-0.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-              </button>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between mt-3">
-            <div>
-              <span className="text-amber-50">89 kr <span className="text-amber-50/55">/mo</span></span>
-              <span className="ml-5 text-amber-50/55">Jan 8</span>
-            </div>
-            <div>
-              <span className="text-sm text-amber-50/55">Monthly</span>
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </section>
   );
