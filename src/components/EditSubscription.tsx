@@ -65,7 +65,7 @@ const EditSubscription = ({ onClose }: EditSubscriptionProps) => {
 
             <label className="block mt-5">
               <h3 className="mb-1">Category</h3>
-              <select className="border rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none">
+              <select className="border cursor-pointer rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none">
                 <option value="entertainment" className="bg-zinc-900">Entertainment</option>
                 <option value="entertainment" className="bg-zinc-900">Software</option>
                 <option value="entertainment" className="bg-zinc-900">Health</option>
@@ -81,7 +81,7 @@ const EditSubscription = ({ onClose }: EditSubscriptionProps) => {
 
             <label className="block mt-5">
               <h3 className="mb-1">Next billing date</h3>
-              <input type="date" className="border rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none" />
+              <input type="date" className="border cursor-pointer rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none" />
             </label>
 
             <label className="block mt-5">
@@ -92,14 +92,14 @@ const EditSubscription = ({ onClose }: EditSubscriptionProps) => {
                   type="color"
                   value={color}
                   onChange={(e) => setColor(e.target.value)}
-                  className="w-12 h-9 px-2 py-1 border rounded-lg cursor-pointer border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
+                  className="w-12 h-11 px-2 py-1 border rounded-lg cursor-pointer border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
                 />
 
                 <input
                   type="text"
                   value={color}
                   onChange={(e) => setColor(e.target.value)}
-                  className="border rounded-lg px-2 py-1 w-full  border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
+                  className="border rounded-lg px-3 py-2 w-full  border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
                 />
               </div>
             </label>
