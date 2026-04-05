@@ -83,3 +83,35 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    await connectDB();
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: "ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const deletedSubscription = await Subscription.findByIdAndDelete(id);
+
+    if (!deletedSubscription) {
+      return NextResponse.json(
+        { success: false, error: "Subscription not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ success: true, data: deletedSubscription });
+  } catch (error) {
+    console.error("Error deleting subscription:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to delete subscription" },
+      { status: 500 }
+    );
+  }
+}
