@@ -1,6 +1,8 @@
 "use client";
 
 import { useSubscriptions } from "@/src/context/SubscriptionsContext";
+import { useState } from "react";
+import EditSubscription from "./EditSubscription";
 
 const formatBillingDate = (value?: Date | string) => {
   if (!value) {
@@ -45,9 +47,20 @@ const getStatusClasses = (status: "active" | "paused" | "canceled") => {
 
 const YourSubscription = () => {
   const { subscriptions } = useSubscriptions();
-  const activeCount = subscriptions.filter((subscription) => subscription.status === "active").length;
-  const pausedCount = subscriptions.filter((subscription) => subscription.status === "paused").length;
-  const canceledCount = subscriptions.filter((subscription) => subscription.status === "canceled").length;
+  const activeCount = subscriptions.filter(
+    (subscription) => subscription.status === "active"
+  ).length;
+  const pausedCount = subscriptions.filter(
+    (subscription) => subscription.status === "paused"
+  ).length;
+  const canceledCount = subscriptions.filter(
+    (subscription) => subscription.status === "canceled"
+  ).length;
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const OpenOverlay = () => setIsOpen(true);
+  const CloseOverlay = () => setIsOpen(false);
 
   return (
     <section className="px-10 lg:pl-40 mt-22">
@@ -76,39 +89,70 @@ const YourSubscription = () => {
           const statusClasses = getStatusClasses(subscription.status);
 
           return (
-            <div key={subscription._id} className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
+            <div
+              key={subscription._id}
+              className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]"
+            >
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-row gap-4">
-                  <div className="grid h-12 w-12 place-items-center rounded-xl text-amber-50 ring-1 ring-white/6" style={{ backgroundColor: subscription.brandColor }}>
-                    <span className="text-xl font-bold">{subscription.name.charAt(0).toUpperCase()}</span>
+                  <div
+                    className="grid h-12 w-12 place-items-center rounded-xl text-amber-50 ring-1 ring-white/6"
+                    style={{ backgroundColor: subscription.brandColor }}
+                  >
+                    <span className="text-xl font-bold">
+                      {subscription.name.charAt(0).toUpperCase()}
+                    </span>
                   </div>
                   <div className="flex flex-col">
-                    <h3 className="font-semibold text-amber-50">{subscription.name}</h3>
-                    <span className="text-sm text-amber-100/62">{subscription.category}</span>
+                    <h3 className="font-semibold text-amber-50">
+                      {subscription.name}
+                    </h3>
+                    <span className="text-sm text-amber-100/62">
+                      {subscription.category}
+                    </span>
                   </div>
                 </div>
                 <div className="flex flex-row items-center gap-3">
-                  <div className={`flex flex-row items-center gap-2 rounded-full border px-4 py-1 ${statusClasses.badge}`}>
-                    <div className={`h-2 w-2 rounded-full ${statusClasses.dot}`}></div>
-                    <span className={`text-sm capitalize ${statusClasses.text}`}>{subscription.status}</span>
+                  <div
+                    className={`flex flex-row items-center gap-2 rounded-full border px-4 py-1 ${statusClasses.badge}`}
+                  >
+                    <div
+                      className={`h-2 w-2 rounded-full ${statusClasses.dot}`}
+                    ></div>
+                    <span
+                      className={`text-sm capitalize ${statusClasses.text}`}
+                    >
+                      {subscription.status}
+                    </span>
                   </div>
-                  <button className="flex cursor-pointer flex-row gap-0.5">
+                  <button
+                    onClick={OpenOverlay}
+                    className="flex cursor-pointer flex-row gap-0.5"
+                  >
                     <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
                     <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
                     <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
                   </button>
+                  {isOpen && <EditSubscription onClose={CloseOverlay} />}
                 </div>
               </div>
               <div className="mt-3 flex flex-row justify-between">
                 <div>
                   <span className="text-amber-50">
-                    {subscription.price} kr <span className="text-amber-50/55">/{subscription.billingCycle === "monthly" ? "mo" : "yr"}</span>
+                    {subscription.price} kr{" "}
+                    <span className="text-amber-50/55">
+                      /{subscription.billingCycle === "monthly" ? "mo" : "yr"}
+                    </span>
                   </span>
-                  <span className="ml-5 text-amber-50/55">{formatBillingDate(subscription.nextBillingDate)}</span>
+                  <span className="ml-5 text-amber-50/55">
+                    {formatBillingDate(subscription.nextBillingDate)}
+                  </span>
                 </div>
                 <div>
                   <span className="text-sm text-amber-50/55">
-                    {subscription.billingCycle === "monthly" ? "Monthly" : "Yearly"}
+                    {subscription.billingCycle === "monthly"
+                      ? "Monthly"
+                      : "Yearly"}
                   </span>
                 </div>
               </div>
