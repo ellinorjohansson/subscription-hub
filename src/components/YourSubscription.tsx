@@ -2,11 +2,15 @@
 
 import { useSubscriptions } from "@/src/context/SubscriptionsContext";
 
-const formatBillingDate = (value: string) => {
+const formatBillingDate = (value?: Date | string) => {
+  if (!value) {
+    return "";
+  }
+
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return value;
+    return String(value);
   }
 
   return new Intl.DateTimeFormat("en-US", {
@@ -72,7 +76,7 @@ const YourSubscription = () => {
           const statusClasses = getStatusClasses(subscription.status);
 
           return (
-            <div key={subscription.id} className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
+            <div key={subscription._id} className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]">
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-row gap-4">
                   <div className="grid h-12 w-12 place-items-center rounded-xl text-amber-50 ring-1 ring-white/6" style={{ backgroundColor: subscription.brandColor }}>
