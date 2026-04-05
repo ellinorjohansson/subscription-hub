@@ -6,11 +6,11 @@ import {
   useContext,
   useState,
 } from "react";
-import type { Subscription } from "../types/subscriptions";
+import type { ISubscription } from "../models/Subscriptions";
 
 type SubscriptionsContextValue = {
-  subscriptions: Subscription[];
-  addSubscription: (subscription: Subscription) => void;
+  subscriptions: ISubscription[];
+  addSubscription: (subscription: ISubscription) => void;
 };
 
 const SubscriptionsContext = createContext<SubscriptionsContextValue | undefined>(
@@ -18,9 +18,9 @@ const SubscriptionsContext = createContext<SubscriptionsContextValue | undefined
 );
 
 export const SubscriptionsProvider = ({ children }: { children: ReactNode }) => {
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
 
-  const addSubscription = (subscription: Subscription) => {
+  const addSubscription = (subscription: ISubscription) => {
     setSubscriptions((prev) => [...prev, subscription]);
   };
 

@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useSubscriptions } from "@/src/context/SubscriptionsContext";
-import type { Subscription } from "@/src/types/subscriptions";
 
 // The overlay renders through a portal into document.body, so even though the open state still lived in ex Header, the overlay itself is no longer nested inside the header layout. So it sits on top of the whole page.
 
