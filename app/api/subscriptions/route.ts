@@ -47,3 +47,39 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    await connectDB();
+    const body = await request.json();
+    const { id, status } = body;
+
+    if (!id || !status) {
+      return NextResponse.json(
+        { success: false, error: "ID and status are required" },
+        { status: 400 }
+      );
+    }
+
+    const updateSubscription = await Subscription.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!updateSubscription) {
+      return NextResponse.json(
+        { success: false, error: "Subscription not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ success: true, data: updateSubscription });
+  } catch (error) {
+    console.error("Error update subscription:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to update subscription" },
+      { status: 500 }
+    );
+  }
+}
