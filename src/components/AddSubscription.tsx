@@ -38,6 +38,7 @@ const AddSubscription = ({ onClose }: AddSubscriptionProps) => {
           category,
           nextBillingDate,
           brandColor,
+          status: "active",
         }),
       });
 

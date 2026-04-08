@@ -12,6 +12,7 @@ import type { ISubscription } from "../models/Subscriptions";
 type SubscriptionsContextValue = {
   subscriptions: ISubscription[];
   addSubscription: (subscription: ISubscription) => void;
+  updateSubscription: (id: string, updates: Partial<ISubscription>) => void;
 };
 
 const SubscriptionsContext = createContext<
@@ -48,8 +49,40 @@ export const SubscriptionsProvider = ({
     setSubscriptions((prev) => [...prev, subscription]);
   };
 
+  // Call your API and then the PUT in route.ts starts
+  const updateSubscription = async (
+    id: string,
+    updates: Partial<ISubscription>
+  ) => {
+    try {
+      const res = await fetch("/api/subscriptions", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          status: updates.status,
+        }),
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        setSubscriptions((prev) =>
+          prev.map((sub) => (sub._id === id ? result.data : sub))
+        );
+      } else {
+        console.error(result.error);
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
+    }
+  };
+
   return (
-    <SubscriptionsContext.Provider value={{ subscriptions, addSubscription }}>
+    <SubscriptionsContext.Provider
+      value={{ subscriptions, addSubscription, updateSubscription }}
+    >
       {children}
     </SubscriptionsContext.Provider>
   );

@@ -46,7 +46,7 @@ const getStatusClasses = (status: "active" | "paused" | "canceled") => {
 };
 
 const YourSubscription = () => {
-  const { subscriptions } = useSubscriptions();
+  const { subscriptions, updateSubscription } = useSubscriptions();
   const activeCount = subscriptions.filter(
     (subscription) => subscription.status === "active"
   ).length;
@@ -67,6 +67,16 @@ const YourSubscription = () => {
 
   const closeEdit = () => {
     setIsEditOpen(false);
+  };
+
+  const handleCancel = (id: string) => {
+    updateSubscription(id, { status: "canceled" });
+    setIsOpen(false);
+  };
+
+  const handlePause = (id: string) => {
+    updateSubscription(id, { status: "paused" });
+    setIsOpen(false);
   };
 
   return (
@@ -158,7 +168,10 @@ const YourSubscription = () => {
                         </li>
 
                         <li>
-                          <button className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition">
+                          <button
+                            onClick={() => handlePause(subscription._id)}
+                            className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
+                          >
                             Pause
                           </button>
                         </li>
@@ -166,7 +179,10 @@ const YourSubscription = () => {
                         <li className="border-t border-white/10" />
 
                         <li>
-                          <button className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition">
+                          <button
+                            onClick={() => handleCancel(subscription._id)}
+                            className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
+                          >
                             Cancel
                           </button>
                         </li>
