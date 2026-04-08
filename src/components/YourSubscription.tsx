@@ -3,6 +3,7 @@
 import { useSubscriptions } from "@/src/context/SubscriptionsContext";
 import { useState } from "react";
 import EditSubscription from "./EditSubscription";
+import { useSubscriptionCount } from "../hooks/useSubscriptionCounts";
 
 const formatBillingDate = (value?: Date | string) => {
   if (!value) {
@@ -47,12 +48,7 @@ const getStatusClasses = (status: "active" | "paused" | "canceled") => {
 
 const YourSubscription = () => {
   const { subscriptions, updateSubscription } = useSubscriptions();
-  const activeCount = subscriptions.filter(
-    (subscription) => subscription.status === "active"
-  ).length;
-  const pausedCount = subscriptions.filter(
-    (subscription) => subscription.status === "paused"
-  ).length;
+  const { active, paused } = useSubscriptionCount();
   const canceledCount = subscriptions.filter(
     (subscription) => subscription.status === "canceled"
   ).length;
@@ -90,10 +86,10 @@ const YourSubscription = () => {
             All {subscriptions.length}
           </button>
           <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
-            Active {activeCount}
+            Active {active}
           </button>
           <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
-            Paused {pausedCount}
+            Paused {paused}
           </button>
           <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
             Canceled {canceledCount}
