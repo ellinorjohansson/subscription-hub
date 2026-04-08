@@ -57,11 +57,11 @@ const YourSubscription = () => {
     (subscription) => subscription.status === "canceled"
   ).length;
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   const openEdit = () => {
-    setIsOpen(false);
+    setOpenId(null);
     setIsEditOpen(true);
   };
 
@@ -71,12 +71,12 @@ const YourSubscription = () => {
 
   const handleCancel = (id: string) => {
     updateSubscription(id, { status: "canceled" });
-    setIsOpen(false);
+    setOpenId(null);
   };
 
   const handlePause = (id: string) => {
     updateSubscription(id, { status: "paused" });
-    setIsOpen(false);
+    setOpenId(null);
   };
 
   return (
@@ -108,7 +108,8 @@ const YourSubscription = () => {
           return (
             <div
               key={subscription._id}
-              className="rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]"
+              className={`rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]
+                ${openId === subscription._id ? "relative z-50" : "relative"}`}
             >
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-row gap-4">
@@ -145,7 +146,11 @@ const YourSubscription = () => {
 
                   <div className="relative inline-block">
                     <button
-                      onClick={() => setIsOpen((prev) => !prev)}
+                      onClick={() =>
+                        setOpenId((prev) =>
+                          prev === subscription._id ? null : subscription._id
+                        )
+                      }
                       className="flex cursor-pointer gap-1 rounded-md p-2 hover:bg-white/10 transition"
                     >
                       <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
@@ -153,10 +158,10 @@ const YourSubscription = () => {
                       <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
                     </button>
 
-                    {isOpen && (
+                    {openId === subscription._id && (
                       <ul
                         role="menu"
-                        className="absolute right-0 mt-2 w-40 overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl backdrop-blur"
+                        className="absolute z-50 right-0 mt-2 w-40 rounded-xl border border-white/10 bg-zinc-900 shadow-xl backdrop-blur"
                       >
                         <li>
                           <button
