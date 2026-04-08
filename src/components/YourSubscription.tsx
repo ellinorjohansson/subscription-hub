@@ -58,9 +58,16 @@ const YourSubscription = () => {
   ).length;
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
-  const OpenOverlay = () => setIsOpen(true);
-  const CloseOverlay = () => setIsOpen(false);
+  const openEdit = () => {
+    setIsOpen(false);
+    setIsEditOpen(true);
+  };
+
+  const closeEdit = () => {
+    setIsEditOpen(false);
+  };
 
   return (
     <section className="px-10 lg:pl-40 mt-22">
@@ -125,15 +132,49 @@ const YourSubscription = () => {
                       {subscription.status}
                     </span>
                   </div>
-                  <button
-                    onClick={OpenOverlay}
-                    className="flex cursor-pointer flex-row gap-0.5"
-                  >
-                    <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
-                    <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
-                    <div className="h-1.5 w-1.5 rounded-full bg-white/20"></div>
-                  </button>
-                  {isOpen && <EditSubscription onClose={CloseOverlay} />}
+
+                  <div className="relative inline-block">
+                    <button
+                      onClick={() => setIsOpen((prev) => !prev)}
+                      className="flex cursor-pointer gap-1 rounded-md p-2 hover:bg-white/10 transition"
+                    >
+                      <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
+                      <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
+                      <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
+                    </button>
+
+                    {isOpen && (
+                      <ul
+                        role="menu"
+                        className="absolute right-0 mt-2 w-40 overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl backdrop-blur"
+                      >
+                        <li>
+                          <button
+                            onClick={openEdit}
+                            className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
+                          >
+                            Edit
+                          </button>
+                        </li>
+
+                        <li>
+                          <button className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition">
+                            Pause
+                          </button>
+                        </li>
+
+                        <li className="border-t border-white/10" />
+
+                        <li>
+                          <button className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition">
+                            Cancel
+                          </button>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+
+                  {isEditOpen && <EditSubscription onClose={closeEdit} />}
                 </div>
               </div>
               <div className="mt-3 flex flex-row justify-between">
