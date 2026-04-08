@@ -172,10 +172,10 @@ const AddSubscription = ({ onClose }: AddSubscriptionProps) => {
                 <option value="News" className="bg-zinc-900">
                   News
                 </option>
-                <option value="music" className="bg-zinc-900">
+                <option value="Music" className="bg-zinc-900">
                   Music
                 </option>
-                <option value="gaming" className="bg-zinc-900">
+                <option value="Gaming" className="bg-zinc-900">
                   Gaming
                 </option>
               </select>
