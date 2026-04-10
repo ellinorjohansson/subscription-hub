@@ -63,6 +63,7 @@ export const SubscriptionsProvider = ({
         body: JSON.stringify({
           id,
           status: updates.status,
+          nextBillingDate: updates.nextBillingDate,
         }),
       });
 

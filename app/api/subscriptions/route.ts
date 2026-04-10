@@ -52,18 +52,31 @@ export async function PUT(request: NextRequest) {
   try {
     await connectDB();
     const body = await request.json();
-    const { id, status } = body;
+    const { id, status, nextBillingDate } = body;
 
-    if (!id || !status) {
+    if (!id) {
       return NextResponse.json(
-        { success: false, error: "ID and status are required" },
+        { success: false, error: "ID is required" },
         { status: 400 }
       );
     }
 
+    const updateData: {
+      status?: "active" | "paused" | "canceled";
+      nextBillingDate?: string | Date | null;
+    } = {};
+
+    if (status !== undefined) {
+      updateData.status = status;
+    }
+
+    if (nextBillingDate !== undefined) {
+      updateData.nextBillingDate = nextBillingDate;
+    }
+
     const updateSubscription = await Subscription.findByIdAndUpdate(
       id,
-      { status },
+      updateData,
       { new: true }
     );
 

@@ -49,6 +49,7 @@ const getStatusClasses = (status: "active" | "paused" | "canceled") => {
 const YourSubscription = () => {
   const { subscriptions, updateSubscription } = useSubscriptions();
   const { active, paused } = useSubscriptionCount();
+
   const canceledCount = subscriptions.filter(
     (subscription) => subscription.status === "canceled"
   ).length;
