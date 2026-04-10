@@ -57,6 +57,9 @@ const YourSubscription = () => {
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [filter, setFilter] = useState<
+    "all" | "active" | "paused" | "canceled"
+  >("all");
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -99,6 +102,11 @@ const YourSubscription = () => {
     setOpenId(null);
   };
 
+  const filteredSubscriptions =
+    filter === "all"
+      ? subscriptions
+      : subscriptions.filter((subscription) => subscription.status === filter);
+
   return (
     <section className="px-10 lg:pl-40 mt-22">
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
@@ -106,23 +114,51 @@ const YourSubscription = () => {
           Your Subscription
         </h2>
         <div className="grid w-full grid-cols-2 gap-2 lg:inline-flex lg:w-auto lg:gap-0 lg:overflow-hidden lg:rounded-xl lg:border lg:border-amber-200/10 lg:bg-white/4 lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] lg:backdrop-blur-sm">
-          <button className="cursor-pointer rounded-xl bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] px-6 py-2 text-center text-amber-50 shadow-[0_8px_30px_rgba(180,83,9,0.2)] lg:rounded-none lg:px-8">
+          <button
+            onClick={() => setFilter("all")}
+            className={`cursor-pointer rounded-xl px-6 py-2 text-center text-amber-50 shadow-[0_8px_30px_rgba(180,83,9,0.2)] lg:rounded-none lg:px-8 ${
+              filter === "all"
+                ? "bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))]"
+                : ""
+            }`}
+          >
             All {subscriptions.length}
           </button>
-          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
+          <button
+            onClick={() => setFilter("active")}
+            className={`cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8 ${
+              filter === "active"
+                ? "bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,0.88))] text-amber-50"
+                : ""
+            }`}
+          >
             Active {active}
           </button>
-          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
+          <button
+            onClick={() => setFilter("paused")}
+            className={`cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8 ${
+              filter === "paused"
+                ? "bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] text-amber-50"
+                : ""
+            }`}
+          >
             Paused {paused}
           </button>
-          <button className="cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8">
+          <button
+            onClick={() => setFilter("canceled")}
+            className={`cursor-pointer rounded-xl border border-amber-200/10 bg-white/4 px-6 py-2 text-center text-amber-100/72 transition duration-200 hover:bg-white/6 hover:text-amber-50 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-8 ${
+              filter === "canceled"
+                ? "bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] text-amber-50"
+                : ""
+            }`}
+          >
             Canceled {canceledCount}
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 py-12">
-        {subscriptions.map((subscription) => {
+        {filteredSubscriptions.map((subscription) => {
           const statusClasses = getStatusClasses(subscription.status);
 
           return (
