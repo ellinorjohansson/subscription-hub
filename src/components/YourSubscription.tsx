@@ -47,7 +47,8 @@ const getStatusClasses = (status: "active" | "paused" | "canceled") => {
 };
 
 const YourSubscription = () => {
-  const { subscriptions, updateSubscription } = useSubscriptions();
+  const { subscriptions, updateSubscription, deleteSubscription } =
+    useSubscriptions();
   const { active, paused } = useSubscriptionCount();
 
   const canceledCount = subscriptions.filter(
@@ -66,13 +67,18 @@ const YourSubscription = () => {
     setIsEditOpen(false);
   };
 
+  const handlePause = (id: string) => {
+    updateSubscription(id, { status: "paused" });
+    setOpenId(null);
+  };
+
   const handleCancel = (id: string) => {
     updateSubscription(id, { status: "canceled" });
     setOpenId(null);
   };
 
-  const handlePause = (id: string) => {
-    updateSubscription(id, { status: "paused" });
+  const handleDelete = (id: string) => {
+    deleteSubscription(id);
     setOpenId(null);
   };
 
@@ -186,6 +192,12 @@ const YourSubscription = () => {
                             className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
                           >
                             Cancel
+                          </button>
+                          <button
+                            onClick={() => handleDelete(subscription._id)}
+                            className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
+                          >
+                            Delete
                           </button>
                         </li>
                       </ul>

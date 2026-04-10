@@ -13,6 +13,7 @@ type SubscriptionsContextValue = {
   subscriptions: ISubscription[];
   addSubscription: (subscription: ISubscription) => void;
   updateSubscription: (id: string, updates: Partial<ISubscription>) => void;
+  deleteSubscription: (id: string) => void;
 };
 
 const SubscriptionsContext = createContext<
@@ -80,9 +81,36 @@ export const SubscriptionsProvider = ({
     }
   };
 
+  const deleteSubscription = async (id: string) => {
+    try {
+      const res = await fetch("/api/subscriptions", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        setSubscriptions((prev) => prev.filter((sub) => sub._id !== id));
+      } else {
+        console.error(result.error);
+      }
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
+
   return (
     <SubscriptionsContext.Provider
-      value={{ subscriptions, addSubscription, updateSubscription }}
+      value={{
+        subscriptions,
+        addSubscription,
+        updateSubscription,
+        deleteSubscription,
+      }}
     >
       {children}
     </SubscriptionsContext.Provider>
