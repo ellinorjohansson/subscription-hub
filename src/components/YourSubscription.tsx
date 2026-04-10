@@ -1,7 +1,7 @@
 "use client";
 
 import { useSubscriptions } from "@/src/context/SubscriptionsContext";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditSubscription from "./EditSubscription";
 import { useSubscriptionCount } from "../hooks/useSubscriptionCounts";
 
@@ -57,6 +57,23 @@ const YourSubscription = () => {
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setOpenId(null);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const openEdit = () => {
     setOpenId(null);
@@ -147,7 +164,7 @@ const YourSubscription = () => {
                     </span>
                   </div>
 
-                  <div className="relative inline-block">
+                  <div ref={containerRef} className="relative inline-block">
                     <button
                       onClick={() =>
                         setOpenId((prev) =>
