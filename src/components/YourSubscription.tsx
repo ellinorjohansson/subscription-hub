@@ -2,6 +2,7 @@
 
 import { useSubscriptions } from "@/src/context/SubscriptionsContext";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import EditSubscription from "./EditSubscription";
 import { useSubscriptionCount } from "../hooks/useSubscriptionCounts";
 
@@ -56,44 +57,58 @@ const YourSubscription = () => {
   ).length;
 
   const [openId, setOpenId] = useState<string | null>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editingSubscriptionId, setEditingSubscriptionId] = useState<
+    string | null
+  >(null);
   const [filter, setFilter] = useState<
     "all" | "active" | "paused" | "canceled"
   >("all");
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const menuRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+
+      // Close menu if clicked outside both button and menu
       if (
         containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        !containerRef.current.contains(target) &&
+        menuRef.current &&
+        !menuRef.current.contains(target)
       ) {
         setOpenId(null);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    if (openId) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [openId]);
 
-  const openEdit = () => {
+  const openEdit = (id: string) => {
     setOpenId(null);
+    setEditingSubscriptionId(id);
     setIsEditOpen(true);
   };
 
   const closeEdit = () => {
     setIsEditOpen(false);
+    setEditingSubscriptionId(null);
   };
 
-  const handlePause = (id: string) => {
-    updateSubscription(id, { status: "paused" });
+  const handlePause = async (id: string) => {
+    await updateSubscription(id, { status: "paused" });
     setOpenId(null);
   };
 
-  const handleCancel = (id: string) => {
-    updateSubscription(id, { status: "canceled" });
+  const handleCancel = async (id: string) => {
+    await updateSubscription(id, { status: "canceled" });
     setOpenId(null);
   };
 
@@ -108,7 +123,7 @@ const YourSubscription = () => {
       : subscriptions.filter((subscription) => subscription.status === filter);
 
   return (
-    <section className="px-10 lg:pl-40 mt-22">
+    <section className="px-10 lg:pl-40 mt-22 overflow-visible">
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <h2 className="mb-3 text-2xl font-semibold tracking-tight text-amber-50">
           Your Subscription
@@ -157,7 +172,7 @@ const YourSubscription = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 py-12">
+      <div className="grid grid-cols-1 gap-4 py-12 overflow-visible">
         {filteredSubscriptions.map((subscription) => {
           const statusClasses = getStatusClasses(subscription.status);
 
@@ -165,7 +180,7 @@ const YourSubscription = () => {
             <div
               key={subscription._id}
               className={`rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))]
-                ${openId === subscription._id ? "relative z-50" : "relative"}`}
+                ${openId === subscription._id ? "relative z-50" : "relative"} overflow-visible`}
             >
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-row gap-4">
@@ -200,28 +215,69 @@ const YourSubscription = () => {
                     </span>
                   </div>
 
-                  <div ref={containerRef} className="relative inline-block">
+                  <div
+                    ref={containerRef}
+                    className="relative inline-block overflow-visible"
+                  >
                     <button
-                      onClick={() =>
-                        setOpenId((prev) =>
-                          prev === subscription._id ? null : subscription._id
-                        )
-                      }
+                      onClick={(e) => {
+                        if (openId === subscription._id) {
+                          setOpenId(null);
+                        } else {
+                          const button = (
+                            e.currentTarget as HTMLElement
+                          ).closest(".relative");
+                          if (button) {
+                            const rect = button.getBoundingClientRect();
+                            const menuWidth = 160;
+                            const menuHeight = 140;
+                            let top = rect.bottom + 8;
+                            let left = rect.right - menuWidth;
+
+                            if (top + menuHeight > window.innerHeight) {
+                              top = rect.top - menuHeight - 20;
+                            }
+
+                            if (left + menuWidth > window.innerWidth) {
+                              left = window.innerWidth - menuWidth - 8;
+                            }
+
+                            if (left < 0) {
+                              left = 8;
+                            }
+
+                            setMenuPosition({ top, left });
+                          }
+                          setOpenId(subscription._id);
+                        }
+                      }}
                       className="flex cursor-pointer gap-1 rounded-md p-2 hover:bg-white/10 transition"
                     >
                       <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
                       <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
                       <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
                     </button>
+                  </div>
 
-                    {openId === subscription._id && (
+                  {openId === subscription._id &&
+                    typeof document !== "undefined" &&
+                    createPortal(
                       <ul
+                        ref={menuRef}
                         role="menu"
-                        className="absolute z-50 right-0 mt-2 w-40 rounded-xl border border-white/10 bg-zinc-900 shadow-xl backdrop-blur"
+                        style={{
+                          position: "fixed",
+                          top: `${menuPosition.top}px`,
+                          left: `${menuPosition.left}px`,
+                        }}
+                        className="z-50 w-40 rounded-xl border border-white/10 bg-zinc-900 shadow-xl backdrop-blur"
                       >
                         <li>
                           <button
-                            onClick={openEdit}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openEdit(subscription._id);
+                            }}
                             className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
                           >
                             Edit
@@ -230,7 +286,10 @@ const YourSubscription = () => {
 
                         <li>
                           <button
-                            onClick={() => handlePause(subscription._id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handlePause(subscription._id);
+                            }}
                             className="w-full px-4 py-2 text-left text-sm text-white/80 hover:bg-white/10 hover:text-white transition"
                           >
                             Pause
@@ -241,23 +300,30 @@ const YourSubscription = () => {
 
                         <li>
                           <button
-                            onClick={() => handleCancel(subscription._id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCancel(subscription._id);
+                            }}
                             className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
                           >
                             Cancel
                           </button>
+                        </li>
+
+                        <li>
                           <button
-                            onClick={() => handleDelete(subscription._id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(subscription._id);
+                            }}
                             className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
                           >
                             Delete
                           </button>
                         </li>
-                      </ul>
+                      </ul>,
+                      document.body
                     )}
-                  </div>
-
-                  {isEditOpen && <EditSubscription onClose={closeEdit} />}
                 </div>
               </div>
               <div className="mt-3 flex flex-row justify-between">
@@ -284,6 +350,14 @@ const YourSubscription = () => {
           );
         })}
       </div>
+
+      {isEditOpen && editingSubscriptionId && (
+        <EditSubscription
+          key={editingSubscriptionId}
+          subscriptionId={editingSubscriptionId}
+          onClose={closeEdit}
+        />
+      )}
     </section>
   );
 };

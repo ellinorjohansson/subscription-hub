@@ -1,19 +1,49 @@
 "use client";
+import { useSubscriptions } from "@/src/context/SubscriptionsContext";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 // The overlay renders through a portal into document.body, so even though the open state still lived in ex Header, the overlay itself is no longer nested inside the header layout. So it sits on top of the whole page.
 
 interface EditSubscriptionProps {
+  subscriptionId: string;
   onClose: () => void;
 }
 
-const EditSubscription = ({ onClose }: EditSubscriptionProps) => {
-  const [color, setColor] = useState("#f59e0b");
+const EditSubscription = ({
+  subscriptionId,
+  onClose,
+}: EditSubscriptionProps) => {
+  const { subscriptions, updateSubscription } = useSubscriptions();
+  const subscription = subscriptions.find((sub) => sub._id === subscriptionId);
+
+  const [formData, setFormData] = useState(() => {
+    if (subscription) {
+      return {
+        name: subscription.name,
+        price: subscription.price.toString(),
+        billingCycle: subscription.billingCycle,
+        category: subscription.category,
+        nextBillingDate: subscription.nextBillingDate
+          ? new Date(subscription.nextBillingDate).toISOString().split("T")[0]
+          : "",
+        color: subscription.brandColor || "#f59e0b",
+      };
+    }
+    return {
+      name: "",
+      price: "",
+      billingCycle: "monthly" as "monthly" | "yearly",
+      category: "",
+      nextBillingDate: "",
+      color: "#f59e0b",
+    };
+  });
 
   // Prevent background scrolling while the modal is open.
   useEffect(() => {
-    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollBarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
 
     document.body.style.overflow = "hidden";
     document.body.style.paddingRight = `${scrollBarWidth}px`;
@@ -23,8 +53,25 @@ const EditSubscription = ({ onClose }: EditSubscriptionProps) => {
       document.body.style.paddingRight = "0px";
     };
   }, []);
+
+  const handleSave = async () => {
+    if (!subscription) return;
+
+    await updateSubscription(subscriptionId, {
+      name: formData.name,
+      price: parseFloat(formData.price),
+      billingCycle: formData.billingCycle,
+      category: formData.category,
+      nextBillingDate: new Date(formData.nextBillingDate),
+      brandColor: formData.color,
+      status: "active",
+    });
+
+    onClose();
+  };
+
   // So the overlay opens on top of everything
-  if (typeof document === "undefined") {
+  if (typeof document === "undefined" || !subscription) {
     return null;
   }
   // CreatePortal so it opens on top of everything
@@ -45,60 +92,126 @@ const EditSubscription = ({ onClose }: EditSubscriptionProps) => {
           <div>
             <label className="block">
               <h3 className="mb-1">Name</h3>
-              <input type="text" className="border rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none" />
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }
+                className="border rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
+              />
             </label>
 
             <div className="flex gap-5 mt-5">
               <label className="flex-1">
                 <h3 className="mb-1">Price (SEK)</h3>
-                <input type="number" className="border rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none" />
+                <input
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, price: e.target.value }))
+                  }
+                  className="border rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
+                />
               </label>
 
               <label className="flex-1">
                 <h3 className="mb-1">Billing cycle</h3>
-                <select className="w-full px-3 py-2 rounded-lg border border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition cursor-pointer appearance-none">
-                  <option value="monthly" className="bg-zinc-900">Monthly</option>
-                  <option value="yearly" className="bg-zinc-900">Yearly</option>
+                <select
+                  value={formData.billingCycle}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      billingCycle: e.target.value as "monthly" | "yearly",
+                    }))
+                  }
+                  className="w-full px-3 py-2 rounded-lg border border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition cursor-pointer appearance-none"
+                >
+                  <option value="monthly" className="bg-zinc-900">
+                    Monthly
+                  </option>
+                  <option value="yearly" className="bg-zinc-900">
+                    Yearly
+                  </option>
                 </select>
               </label>
             </div>
 
             <label className="block mt-5">
               <h3 className="mb-1">Category</h3>
-              <select className="border cursor-pointer rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none">
-                <option value="entertainment" className="bg-zinc-900">Entertainment</option>
-                <option value="entertainment" className="bg-zinc-900">Software</option>
-                <option value="entertainment" className="bg-zinc-900">Health</option>
-                <option value="entertainment" className="bg-zinc-900">Storage</option>
-                <option value="entertainment" className="bg-zinc-900">Shopping</option>
-                <option value="entertainment" className="bg-zinc-900">Productivity</option>
-                <option value="entertainment" className="bg-zinc-900">News</option>
-                <option value="music" className="bg-zinc-900">Music</option>
-                <option value="gaming" className="bg-zinc-900">Gaming</option>
-                <option value="entertainment" className="bg-zinc-900">Other</option>
+              <select
+                value={formData.category}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, category: e.target.value }))
+                }
+                className="border cursor-pointer rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
+              >
+                <option value="entertainment" className="bg-zinc-900">
+                  Entertainment
+                </option>
+                <option value="software" className="bg-zinc-900">
+                  Software
+                </option>
+                <option value="health" className="bg-zinc-900">
+                  Health
+                </option>
+                <option value="storage" className="bg-zinc-900">
+                  Storage
+                </option>
+                <option value="shopping" className="bg-zinc-900">
+                  Shopping
+                </option>
+                <option value="productivity" className="bg-zinc-900">
+                  Productivity
+                </option>
+                <option value="news" className="bg-zinc-900">
+                  News
+                </option>
+                <option value="music" className="bg-zinc-900">
+                  Music
+                </option>
+                <option value="gaming" className="bg-zinc-900">
+                  Gaming
+                </option>
+                <option value="other" className="bg-zinc-900">
+                  Other
+                </option>
               </select>
             </label>
 
             <label className="block mt-5">
               <h3 className="mb-1">Next billing date</h3>
-              <input type="date" className="border cursor-pointer rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none" />
+              <input
+                type="date"
+                value={formData.nextBillingDate}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    nextBillingDate: e.target.value,
+                  }))
+                }
+                className="border cursor-pointer rounded-lg w-full px-3 py-2 border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
+              />
             </label>
 
             <label className="block mt-5">
               <h3 className="mb-1">Branding color</h3>
               <div className="flex gap-2 items-center">
-
                 <input
                   type="color"
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)}
+                  value={formData.color}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, color: e.target.value }))
+                  }
                   className="w-12 h-11 px-2 py-1 border rounded-lg cursor-pointer border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
                 />
 
                 <input
                   type="text"
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)}
+                  value={formData.color}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, color: e.target.value }))
+                  }
                   className="border rounded-lg px-3 py-2 w-full  border-amber-200/10 bg-black/30 text-amber-50 backdrop-blur-sm focus:outline-none focus:border-amber-300/30 focus:bg-black/40 transition appearance-none"
                 />
               </div>
@@ -106,13 +219,16 @@ const EditSubscription = ({ onClose }: EditSubscriptionProps) => {
 
             <div className="flex gap-3 justify-end mt-10">
               <button
-                className="border border-amber-50/40 rounded-lg px-3 py-1 hover:bg-white/5"
+                className="border cursor-pointer border-amber-50/40 rounded-lg px-3 py-1 hover:bg-white/5"
                 onClick={onClose}
               >
                 Cancel
               </button>
 
-              <button className="rounded-lg px-3 py-1 border border-amber-300/15 bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] text-amber-50 shadow-[0_10px_30px_rgba(180,83,9,0.28)] transition duration-200 hover:brightness-110">
+              <button
+                onClick={handleSave}
+                className="cursor-pointer rounded-lg px-3 py-1 border border-amber-300/15 bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] text-amber-50 shadow-[0_10px_30px_rgba(180,83,9,0.28)] transition duration-200 hover:brightness-110"
+              >
                 Save changes
               </button>
             </div>

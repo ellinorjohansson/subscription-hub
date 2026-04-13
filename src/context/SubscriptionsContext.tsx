@@ -47,7 +47,11 @@ export const SubscriptionsProvider = ({
   }, []);
 
   const addSubscription = (subscription: ISubscription) => {
-    setSubscriptions((prev) => [...prev, subscription]);
+    setSubscriptions((prev) => [subscription, ...prev]);
+
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("activity:changed"));
+    }
   };
 
   // Call your API and then the PUT in route.ts starts
@@ -63,6 +67,11 @@ export const SubscriptionsProvider = ({
         },
         body: JSON.stringify({
           id,
+          name: updates.name,
+          price: updates.price,
+          billingCycle: updates.billingCycle,
+          category: updates.category,
+          brandColor: updates.brandColor,
           status: updates.status,
           nextBillingDate: updates.nextBillingDate,
         }),
@@ -73,6 +82,10 @@ export const SubscriptionsProvider = ({
         setSubscriptions((prev) =>
           prev.map((sub) => (sub._id === id ? result.data : sub))
         );
+
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("activity:changed"));
+        }
       } else {
         console.error(result.error);
       }
@@ -95,6 +108,10 @@ export const SubscriptionsProvider = ({
 
       if (result.success) {
         setSubscriptions((prev) => prev.filter((sub) => sub._id !== id));
+
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("activity:changed"));
+        }
       } else {
         console.error(result.error);
       }

@@ -12,14 +12,14 @@ export function getNextBillingDate(
   const today = new Date();
   const original = new Date(nextBillingDate);
 
-  if (billingCycle === "monthly") {
-    const next = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      original.getDate()
-    );
+  if (Number.isNaN(original.getTime())) {
+    return null;
+  }
 
-    if (next <= today) {
+  if (billingCycle === "monthly") {
+    const next = new Date(original);
+
+    while (next <= today) {
       next.setMonth(next.getMonth() + 1);
     }
 
@@ -27,13 +27,9 @@ export function getNextBillingDate(
   }
 
   if (billingCycle === "yearly") {
-    const next = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      original.getDate()
-    );
+    const next = new Date(original);
 
-    if (next <= today) {
+    while (next <= today) {
       next.setFullYear(next.getFullYear() + 1);
     }
 

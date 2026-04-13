@@ -5,10 +5,10 @@ import YourSubscription from "@/src/components/YourSubscription";
 
 export default function Home() {
   return (
-    <main className="flex flex-col flex-1 font-sans text-amber-50/95">
+    <main className="flex flex-col flex-1 font-sans text-amber-50/95 overflow-visible">
       <OverviewSection />
       <QuickAddSection />
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr]">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] overflow-visible">
         <YourSubscription />
         <RecentActivity />
       </div>
