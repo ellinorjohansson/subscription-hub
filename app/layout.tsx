@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: "Subscription Tracker",
   description: "Track your subscriptions",
   icons: {
-    icon: "/favicon/subtracker_favicon.png",
+    icon: "/favicon/favicon.png",
   },
 };
 
