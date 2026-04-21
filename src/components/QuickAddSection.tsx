@@ -7,16 +7,22 @@ interface QuickAddSectionProps {
 
 const QuickAddSection = ({ onQuickAdd }: QuickAddSectionProps) => {
   const { subscriptions } = useSubscriptions();
+  const canceledSubscriptions = subscriptions.filter(
+    (sub) => sub.status === "canceled"
+  );
 
   return (
     <section className="px-10 lg:px-40">
       <h2 className="mb-4 text-sm uppercase tracking-[0.18em] text-amber-100/60">
         Quick add from history
       </h2>
-      <ul className="flex flex-wrap gap-2">
-        {subscriptions
-          .filter((sub) => sub.status === "canceled")
-          .map((sub) => (
+      {canceledSubscriptions.length === 0 ? (
+        <p className="text-sm text-amber-50/70">
+          No recent subscriptions to add
+        </p>
+      ) : (
+        <ul className="flex flex-wrap gap-2">
+          {canceledSubscriptions.map((sub) => (
             <li key={sub._id}>
               <button
                 onClick={() => onQuickAdd(sub._id)}
@@ -30,7 +36,8 @@ const QuickAddSection = ({ onQuickAdd }: QuickAddSectionProps) => {
               </button>
             </li>
           ))}
-      </ul>
+        </ul>
+      )}
     </section>
   );
 };
