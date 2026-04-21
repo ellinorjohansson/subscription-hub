@@ -11,7 +11,8 @@ interface AddSubscriptionProps {
 }
 
 const AddSubscription = ({ onClose }: AddSubscriptionProps) => {
-  const { addSubscription } = useSubscriptions();
+  const { addSubscription, subscriptions, updateSubscription } =
+    useSubscriptions();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [billingCycle, setBillingCycle] =
@@ -24,6 +25,36 @@ const AddSubscription = ({ onClose }: AddSubscriptionProps) => {
     e: React.SyntheticEvent<HTMLFormElement, SubmitEvent>
   ) => {
     e.preventDefault();
+
+    const normalizedName = name.trim().toLowerCase();
+    const canceledSubscription = subscriptions.find(
+      (sub) =>
+        sub.status === "canceled" &&
+        sub.name.trim().toLowerCase() === normalizedName
+    );
+
+    if (canceledSubscription) {
+      await updateSubscription(canceledSubscription._id, {
+        name: name.trim(),
+        price: parseFloat(price),
+        billingCycle,
+        category,
+        nextBillingDate: nextBillingDate
+          ? new Date(nextBillingDate)
+          : canceledSubscription.nextBillingDate,
+        brandColor,
+        status: "active",
+      });
+
+      setName("");
+      setPrice("");
+      setBillingCycle("monthly");
+      setCategory("Other");
+      setNextBillingDate("");
+      setBrandingColor("#f59e0b");
+      onClose();
+      return;
+    }
 
     try {
       const response = await fetch("/api/subscriptions", {

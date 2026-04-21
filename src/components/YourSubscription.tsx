@@ -3,7 +3,6 @@
 import { useSubscriptions } from "@/src/context/SubscriptionsContext";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import EditSubscription from "./EditSubscription";
 import { useSubscriptionCount } from "../hooks/useSubscriptionCounts";
 
 const formatBillingDate = (value?: Date | string) => {
@@ -47,7 +46,11 @@ const getStatusClasses = (status: "active" | "paused" | "canceled") => {
   };
 };
 
-const YourSubscription = () => {
+interface YourSubscriptionProps {
+  onOpenEdit: (subscriptionId: string) => void;
+}
+
+const YourSubscription = ({ onOpenEdit }: YourSubscriptionProps) => {
   const { subscriptions, updateSubscription, deleteSubscription } =
     useSubscriptions();
   const { active, paused } = useSubscriptionCount();
@@ -58,10 +61,6 @@ const YourSubscription = () => {
 
   const [openId, setOpenId] = useState<string | null>(null);
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editingSubscriptionId, setEditingSubscriptionId] = useState<
-    string | null
-  >(null);
   const [filter, setFilter] = useState<
     "all" | "active" | "paused" | "canceled"
   >("all");
@@ -93,13 +92,7 @@ const YourSubscription = () => {
 
   const openEdit = (id: string) => {
     setOpenId(null);
-    setEditingSubscriptionId(id);
-    setIsEditOpen(true);
-  };
-
-  const closeEdit = () => {
-    setIsEditOpen(false);
-    setEditingSubscriptionId(null);
+    onOpenEdit(id);
   };
 
   const handlePause = async (id: string) => {
@@ -350,14 +343,6 @@ const YourSubscription = () => {
           );
         })}
       </div>
-
-      {isEditOpen && editingSubscriptionId && (
-        <EditSubscription
-          key={editingSubscriptionId}
-          subscriptionId={editingSubscriptionId}
-          onClose={closeEdit}
-        />
-      )}
     </section>
   );
 };
