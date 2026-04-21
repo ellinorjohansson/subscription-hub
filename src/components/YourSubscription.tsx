@@ -178,36 +178,36 @@ const YourSubscription = ({ onOpenEdit }: YourSubscriptionProps) => {
             return (
               <div
                 key={subscription._id}
-                className={`rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-8 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))] ${openId === subscription._id ? "relative z-50" : "relative"} overflow-visible`}
+                className={`rounded-2xl border border-amber-200/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(217,119,6,0.06))] px-4 py-4 sm:px-8 sm:py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm transition duration-200 hover:border-amber-200/16 hover:bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(217,119,6,0.09))] ${openId === subscription._id ? "relative z-50" : "relative"} overflow-visible`}
               >
-                <div className="flex flex-row items-center justify-between">
-                  <div className="flex flex-row gap-4">
+                <div className="relative sm:flex sm:items-start sm:justify-between sm:gap-3">
+                  <div className="flex min-w-0 w-full flex-row gap-3 pr-24 sm:w-auto sm:gap-4 sm:pr-0">
                     <div
-                      className="grid h-12 w-12 place-items-center rounded-xl text-amber-50 ring-1 ring-white/6"
+                      className="grid h-10 w-10 place-items-center rounded-xl text-amber-50 ring-1 ring-white/6 sm:h-12 sm:w-12"
                       style={{ backgroundColor: subscription.brandColor }}
                     >
-                      <span className="text-xl font-bold">
+                      <span className="text-lg font-bold sm:text-xl">
                         {subscription.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <div className="flex flex-col">
-                      <h3 className="font-semibold text-amber-50">
+                    <div className="flex min-w-0 flex-col">
+                      <h3 className="truncate text-sm font-semibold text-amber-50 sm:text-base">
                         {subscription.name}
                       </h3>
-                      <span className="text-sm text-amber-100/62">
+                      <span className="truncate text-xs text-amber-100/62 sm:text-sm">
                         {subscription.category}
                       </span>
                     </div>
                   </div>
-                  <div className="flex flex-row items-center gap-3">
+                  <div className="absolute right-0 top-0 flex shrink-0 flex-row items-center gap-1.5 sm:static sm:ml-2 sm:gap-2">
                     <div
-                      className={`flex flex-row items-center gap-2 rounded-full border px-4 py-1 ${statusClasses.badge}`}
+                      className={`flex flex-row items-center gap-1.5 rounded-full border px-2 py-1 sm:gap-2 sm:px-4 ${statusClasses.badge}`}
                     >
                       <div
                         className={`h-2 w-2 rounded-full ${statusClasses.dot}`}
                       ></div>
                       <span
-                        className={`text-sm capitalize ${statusClasses.text}`}
+                        className={`text-[11px] capitalize sm:text-sm ${statusClasses.text}`}
                       >
                         {subscription.status}
                       </span>
@@ -249,7 +249,7 @@ const YourSubscription = ({ onOpenEdit }: YourSubscriptionProps) => {
                             setOpenId(subscription._id);
                           }
                         }}
-                        className="flex cursor-pointer gap-1 rounded-md p-2 hover:bg-white/10 transition"
+                        className="flex cursor-pointer gap-1 rounded-md p-1.5 transition hover:bg-white/10 sm:p-2"
                       >
                         <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
                         <div className="h-1.5 w-1.5 rounded-full bg-white/60"></div>
@@ -324,20 +324,20 @@ const YourSubscription = ({ onOpenEdit }: YourSubscriptionProps) => {
                       )}
                   </div>
                 </div>
-                <div className="mt-3 flex flex-row justify-between">
+                <div className="mt-2 flex flex-row items-center justify-between sm:mt-3">
                   <div>
-                    <span className="text-amber-50">
+                    <span className="text-sm text-amber-50 sm:text-base">
                       {subscription.price} kr{" "}
                       <span className="text-amber-50/55">
                         /{subscription.billingCycle === "monthly" ? "mo" : "yr"}
                       </span>
                     </span>
-                    <span className="ml-5 text-amber-50/55">
+                    <span className="ml-3 text-sm text-amber-50/55 sm:ml-5">
                       {formatBillingDate(subscription.nextBillingDate)}
                     </span>
                   </div>
                   <div>
-                    <span className="text-sm text-amber-50/55">
+                    <span className="text-xs text-amber-50/55 sm:text-sm">
                       {subscription.billingCycle === "monthly"
                         ? "Monthly"
                         : "Yearly"}
