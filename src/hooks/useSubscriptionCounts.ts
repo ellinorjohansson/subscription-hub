@@ -14,7 +14,9 @@ export function useSubscriptionCount() {
       const price = subscription.price || 0;
       yearlyEstimated +=
         subscription.billingCycle === "monthly" ? price * 12 : price;
-      monthlySpend += subscription.price;
+      if (subscription.billingCycle === "monthly") {
+        monthlySpend += subscription.price;
+      }
     }
     if (subscription.status === "paused") {
       paused += 1;
