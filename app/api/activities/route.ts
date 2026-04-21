@@ -6,6 +6,9 @@ export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // 7 days
+    await Activity.deleteMany({ occurredAt: { $lt: sevenDaysAgo } });
+
     const { searchParams } = new URL(request.url);
     const rawLimit = searchParams.get("limit");
 

@@ -28,6 +28,7 @@ const ActivitySchema = new Schema<IActivity>(
       type: Date,
       default: Date.now,
       required: true,
+      expires: 60 * 60 * 24 * 7, // 7 days
     },
   },
   {
