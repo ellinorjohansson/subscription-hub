@@ -11,7 +11,9 @@ export function useSubscriptionCount() {
   subscriptions.forEach((subscription) => {
     if (subscription.status === "active") {
       active += 1;
-      yearlyEstimated += (subscription.price || 0) * 12;
+      const price = subscription.price || 0;
+      yearlyEstimated +=
+        subscription.billingCycle === "monthly" ? price * 12 : price;
       monthlySpend += subscription.price;
     }
     if (subscription.status === "paused") {
