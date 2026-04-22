@@ -1,6 +1,7 @@
 import Activity, { IActivity } from "../models/Activity";
 
 type LogActivityInput = {
+  userId: string;
   subscriptionId: string;
   subscriptionName: string;
   eventType: IActivity["eventType"];
@@ -9,6 +10,7 @@ type LogActivityInput = {
 };
 
 export async function logActivity({
+  userId,
   subscriptionId,
   subscriptionName,
   eventType,
@@ -17,6 +19,7 @@ export async function logActivity({
 }: LogActivityInput) {
   try {
     return await Activity.create({
+      userId,
       subscriptionId,
       subscriptionName,
       eventType,

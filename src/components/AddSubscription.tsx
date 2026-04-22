@@ -244,7 +244,7 @@ const AddSubscription = ({ onClose }: AddSubscriptionProps) => {
             <div className="flex gap-3 justify-end mt-10">
               <button
                 type="button"
-                className="border border-amber-50/40 rounded-lg px-3 py-1 hover:bg-white/5"
+                className="cursor-pointer border border-amber-50/40 rounded-lg px-3 py-1 hover:bg-white/5"
                 onClick={onClose}
               >
                 Cancel
@@ -252,7 +252,7 @@ const AddSubscription = ({ onClose }: AddSubscriptionProps) => {
 
               <button
                 type="submit"
-                className="rounded-lg px-3 py-1 border border-amber-300/15 bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] text-amber-50 shadow-[0_10px_30px_rgba(180,83,9,0.28)] transition duration-200 hover:brightness-110"
+                className="cursor-pointer rounded-lg px-3 py-1 border border-amber-300/15 bg-[linear-gradient(135deg,rgba(217,119,6,0.92),rgba(180,83,9,0.88))] text-amber-50 shadow-[0_10px_30px_rgba(180,83,9,0.28)] transition duration-200 hover:brightness-110"
               >
                 Add subscription
               </button>

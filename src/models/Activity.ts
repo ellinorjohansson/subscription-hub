@@ -2,6 +2,7 @@ import mongoose, { Schema, Model } from "mongoose";
 
 // How the data should look in my code
 export interface IActivity {
+  userId: string;
   subscriptionId: string;
   subscriptionName: string;
   eventType: "created" | "paused" | "canceled" | "deleted";
@@ -11,6 +12,16 @@ export interface IActivity {
 
 const ActivitySchema = new Schema<IActivity>(
   {
+    userId: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    subscriptionId: {
+      type: String,
+      required: true,
+      index: true,
+    },
     subscriptionName: {
       type: String,
       required: true,
