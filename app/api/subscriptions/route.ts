@@ -3,16 +3,28 @@ import { getNextBillingDate } from "@/src/lib/billingDate";
 import connectDB from "@/src/lib/db";
 import Subscription, { type ISubscription } from "@/src/models/Subscriptions";
 import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 const isSameUtcDate = (a: Date, b: Date) =>
   a.getUTCFullYear() === b.getUTCFullYear() &&
   a.getUTCMonth() === b.getUTCMonth() &&
   a.getUTCDate() === b.getUTCDate();
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const token = await getToken({ req: request });
+    const userId = token?.sub;
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     await connectDB();
-    const subscriptions = await Subscription.find().sort({ createdAt: -1 });
+    const subscriptions = await Subscription.find({ userId }).sort({
+      createdAt: -1,
+    });
 
     await Promise.all(
       subscriptions.map(async (subscription) => {
@@ -54,6 +66,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const token = await getToken({ req: request });
+    const userId = token?.sub;
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     await connectDB();
     const body = await request.json();
     const {
@@ -67,6 +88,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     const newSubscription = new Subscription({
+      userId,
       name,
       price: Number(price),
       billingCycle,
@@ -79,6 +101,7 @@ export async function POST(request: NextRequest) {
     await newSubscription.save();
 
     await logActivity({
+      userId,
       subscriptionId: String(newSubscription._id),
       subscriptionName: newSubscription.name,
       eventType: "created",
@@ -100,6 +123,15 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const token = await getToken({ req: request });
+    const userId = token?.sub;
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     await connectDB();
     const body = await request.json();
     const {
@@ -161,7 +193,10 @@ export async function PUT(request: NextRequest) {
       updateData.nextBillingDate = nextBillingDate;
     }
 
-    const existingSubscription = await Subscription.findById(id);
+    const existingSubscription = await Subscription.findOne({
+      _id: id,
+      userId,
+    });
 
     if (!existingSubscription) {
       return NextResponse.json(
@@ -170,8 +205,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const updateSubscription = await Subscription.findByIdAndUpdate(
-      id,
+    const updateSubscription = await Subscription.findOneAndUpdate(
+      { _id: id, userId },
       updateData,
       { new: true }
     );
@@ -185,6 +220,7 @@ export async function PUT(request: NextRequest) {
 
     if (status && status !== existingSubscription.status) {
       await logActivity({
+        userId,
         subscriptionId: String(updateSubscription._id),
         subscriptionName: updateSubscription.name,
         eventType: status,
@@ -204,6 +240,15 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const token = await getToken({ req: request });
+    const userId = token?.sub;
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     await connectDB();
     const { id } = await request.json();
 
@@ -214,7 +259,10 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const deletedSubscription = await Subscription.findByIdAndDelete(id);
+    const deletedSubscription = await Subscription.findOneAndDelete({
+      _id: id,
+      userId,
+    });
 
     if (!deletedSubscription) {
       return NextResponse.json(
@@ -224,6 +272,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     await logActivity({
+      userId,
       subscriptionId: String(deletedSubscription._id),
       subscriptionName: deletedSubscription.name,
       eventType: "deleted",

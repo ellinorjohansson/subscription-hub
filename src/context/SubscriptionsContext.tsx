@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useSession } from "next-auth/react";
 import type { ISubscription } from "../models/Subscriptions";
 
 type SubscriptionsContextValue = {
@@ -26,8 +27,16 @@ export const SubscriptionsProvider = ({
   children: ReactNode;
 }) => {
   const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
+  const { data: session, status } = useSession();
+  const userId = session?.user?.id;
 
   useEffect(() => {
+    if (status !== "authenticated" || !userId) {
+      return;
+    }
+
+    let cancelled = false;
+
     const loadSubscriptions = async () => {
       try {
         const response = await fetch("/api/subscriptions", {
@@ -35,7 +44,7 @@ export const SubscriptionsProvider = ({
         });
         const result = await response.json();
 
-        if (response.ok && result.success) {
+        if (!cancelled && response.ok && result.success) {
           setSubscriptions(result.data ?? []);
         }
       } catch (error) {
@@ -44,7 +53,12 @@ export const SubscriptionsProvider = ({
     };
 
     loadSubscriptions();
-  }, []);
+
+    return () => {
+      cancelled = true;
+      setSubscriptions([]);
+    };
+  }, [userId, status]);
 
   const addSubscription = (subscription: ISubscription) => {
     setSubscriptions((prev) => [subscription, ...prev]);
